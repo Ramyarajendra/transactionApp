@@ -3,6 +3,7 @@ import thunk from 'redux-thunk'
 import authReducer from '../reducers/authReducer'
 import alertReducer from '../reducers/alertReducer'
 import { profileReducer } from '../reducers/profileReducer'
+import accountReducer from '../reducers/accountReducer'
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
@@ -10,7 +11,8 @@ const store= createStore(
     combineReducers({
         auth: authReducer,
         alert : alertReducer,
-        profile: profileReducer
+        profile: profileReducer,
+        account: accountReducer
     }),
     composeEnhancers(applyMiddleware(thunk))
 )

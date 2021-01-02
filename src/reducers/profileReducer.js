@@ -1,5 +1,5 @@
 import React from 'react'
-import {UPDATE_PROFILE, GET_PROFILE} from '../utils/Constants'
+import {UPDATE_PROFILE, GET_PROFILE, SIGN_OUT} from '../utils/Constants'
 
 const initialState = {
     profileData: null
@@ -13,6 +13,8 @@ export const profileReducer = (state = initialState, action) =>{
                 ...state,
                 profileData: action.payload
             }
+        case SIGN_OUT:
+            return{}
         default:
             return state;
     }

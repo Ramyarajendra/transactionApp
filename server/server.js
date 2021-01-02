@@ -4,6 +4,7 @@ require('dotenv').config({path: path.join(__dirname, '.env')});
 const connectDB = require('./config/db')
 const authRoute = require('./routes/auth');
 const profileRoute = require('./routes/profile')
+const accountRoute = require('./routes/account')
 // require('dotenv').config();
 
 const app = express();
@@ -17,6 +18,7 @@ app.use(express.json({extended: false}))
 
 app.use(authRoute);
 app.use(profileRoute)
+app.use(accountRoute)
 
 //Define Routes
 

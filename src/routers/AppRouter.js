@@ -7,6 +7,7 @@ import Register from '../components/Register'
 import {createBrowserHistory} from 'history'
 import PrivateRoute from './PrivateRoute'
 import Navbar from '../components/Navbar'
+import Account from '../components/Account'
 
 // export const history = createBrowserHistory()
 
@@ -19,6 +20,8 @@ const AppRouter = ({auth}) => {
                 <Route path='/' component={Login} exact={true}/>
                 <Route path='/register' component={Register}/>
                 <PrivateRoute path='/profile' component={Profile}/>
+                <PrivateRoute path='/account' component={Account}/>
+
             </Switch>
         </div>
         </BrowserRouter>

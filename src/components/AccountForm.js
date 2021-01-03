@@ -10,6 +10,7 @@ import AddAccountForm from './AddAccountForm';
 import { connect } from 'react-redux';
 import { getAccountDetails } from '../actions/accountAction';
 import {maskNumber} from '../utils/mask'
+import {depositAmount, withdrawAmount } from '../actions/transactionAction'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const AccountForm = ({type, account, userData, getAccountDetails}) => {
+const AccountForm = ({type, account, userData, getAccountDetails, depositAmount, withdrawAmount}) => {
     const classes = useStyles();
     const {email} = userData
     const [values, setValues] = React.useState({
@@ -50,10 +51,15 @@ const AccountForm = ({type, account, userData, getAccountDetails}) => {
       if(email)
         getAccountDetails()
     },[email])
+    const onSubmit = (e) => {
+      e.preventDefault()
+      type === 'Deposit' ? depositAmount(account._id, Number(values.amount)): withdrawAmount(account._id, Number(values.amount))
+    }
     return (
         <Container>
           { account_no ?
           <Card className={classes.root} variant="outlined">
+            <form onSubmit={onSubmit}>
             <CardContent>
                 <Typography className={classes.title} gutterBottom>
                  {type}
@@ -75,12 +81,14 @@ const AccountForm = ({type, account, userData, getAccountDetails}) => {
                         labelWidth={60}
                         placeholder={`Enter amount to ${type}`}
                         style={{ width : '40vw'}}
+                        required
                     />
                 </FormControl>
             </CardContent>
             <CardActions>
-                <Button size="small" className={classes.button} variant='outlined' color='primary' >Submit</Button>
+                <Button type='submit' size="small" className={classes.button} variant='outlined' color='primary' >Submit</Button>
             </CardActions>
+            </form>
         </Card> :
         <AddAccountForm/> }
         </Container>
@@ -92,4 +100,4 @@ const mapStateToProps = state => ({
 
 })
 
-export default connect(mapStateToProps, {getAccountDetails})(AccountForm)
+export default connect(mapStateToProps, {getAccountDetails, depositAmount, withdrawAmount })(AccountForm)

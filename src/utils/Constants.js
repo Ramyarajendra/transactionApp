@@ -8,5 +8,6 @@ export const UPDATE_PROFILE = 'UPDATE_PROFILE'
 export const GET_PROFILE = 'GET_PROFILE'
 export const GET_ACCOUNT = 'GET_ACCOUNT'
 export const UPDATE_ACCOUNT = 'UPDATE_ACCOUNT'
+export const ADD_TRANSACTION = 'ADD_TRANSACTION'
 
 

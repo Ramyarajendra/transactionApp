@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import DataTable from './DataTable'
 import 'date-fns';
 import Grid from '@material-ui/core/Grid';
@@ -9,6 +9,8 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 import { Box, Button, makeStyles } from '@material-ui/core';
+import { connect } from 'react-redux';
+import {getTransactions} from '../actions/transactionAction'
 
 const useStyles = makeStyles({
     margin: {
@@ -21,7 +23,7 @@ function disablePrevDates(startDate) {
       return Date.parse(date) < startSeconds;
     }
 }
-const Summary = () => {
+const Summary = ({account, getTransactions, transaction}) => {
     const [startDate, setStartDate] = useState(null);
     const [ endDate, setEndDate] = useState(null)
     const handleStartDateChange = (date) => {
@@ -31,6 +33,16 @@ const Summary = () => {
         setEndDate(date);
     };
     const classes = useStyles()
+
+    const onButtonClick = () => {
+        getTransactions(account && account._id, startDate, endDate)
+    }
+
+    useEffect(()=> {
+       getTransactions(account && account._id)
+    
+    },[])
+
     return(
         <div>
             <Grid className={classes.margin} container justify='center' alignItems='center' spacing={2}>
@@ -72,13 +84,18 @@ const Summary = () => {
                 </Grid>
                 <Grid item xs={4}>
                     <Box mt={3}>
-                        <Button  variant='outlined' color='primary' >Filter</Button>
+                        <Button  onClick={onButtonClick} variant='outlined' color='primary' >Filter</Button>
                     </Box>
                 </Grid>
             </Grid>
-            <DataTable/>
+            <DataTable transaction={transaction}/>
         </div>
     )
 }
+const mapStateToProps = (state) => ({
+    account: state.account,
+    transaction: state.transaction
+})
 
-export default Summary
+
+export default connect(mapStateToProps, {getTransactions})(Summary)

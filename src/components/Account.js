@@ -10,6 +10,7 @@ import LocalAtmIcon from '@material-ui/icons/LocalAtm';
 import PaymentIcon from '@material-ui/icons/Payment'
 import ListIcon from '@material-ui/icons/List';
 import AccountForm from './AccountForm';
+import Summary from './Summary';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -83,7 +84,7 @@ const Account = () => {
         <AccountForm type='Deposit'/>
       </TabPanel>
       <TabPanel value={value} index={2}>
-        Item Three
+        <Summary/>
       </TabPanel>
     </div>
     )

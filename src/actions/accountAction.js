@@ -16,11 +16,12 @@ export const getAccountDetails = () => async dispatch => {
     }
 }
 
-export const updateAccountBalance = (amountToChange, operation) => ({
-    type: UPDATE_ACCOUNT,
-    amountToChange,
-    operation
-  });
+export const updateAccount = (accountInfo) => async dispatch => {
+    dispatch({
+        type: UPDATE_ACCOUNT,
+        payload:accountInfo
+    })
+  };
 
 export const addAccountDetails = (account_no, bank_name, ifsc) => async dispatch => {
     try {

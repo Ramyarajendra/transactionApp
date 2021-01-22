@@ -3,7 +3,9 @@ const authMiddleware = require('../middleware/auth');
 const Account = require('../models/Account');
 const Transactions = require('../models/Transactions');
 const Router = express.Router();
-const { startSession } = require('mongoose')
+const { startSession } = require('mongoose');
+const { getTransactions } = require('../utils/common');
+
 
 Router.post('/deposit/:id', authMiddleware , async (req, res)=> {
     const session = await startSession()
@@ -20,13 +22,15 @@ Router.post('/deposit/:id', authMiddleware , async (req, res)=> {
             balance: total,
             account_id
         })
-        await transactionObj.save()
+        await transactionObj.save({session})
 
-        await Account.findByIdAndUpdate(account_id, {total_balance: total})
+        const accountDetails = await Account.findByIdAndUpdate(account_id, {total_balance: total}, {new : true, session})
         await session.commitTransaction()
         session.endSession()
         res.send({
-            msg: 'Amount Deposited!!'
+            msg: 'Amount Deposited!!',
+            transactionObj,
+            accountDetails
         })
     } catch (error) {
         await session.abortTransaction()
@@ -53,18 +57,20 @@ Router.post('/withdraw/:id', authMiddleware, async(req, res)=> {
                 balance: total,
                 account_id
             })
-            await transactionObj.save()
-            await Account.findByIdAndUpdate(account_id, {total_balance: total})
+            await transactionObj.save({session})
+            const accountDetails = await Account.findByIdAndUpdate(account_id, {total_balance: total},{new : true, session})
+            await session.commitTransaction()
+            session.endSession()
+            res.send({
+                msg:'Amount withdrawn',
+                transactionObj,
+                accountDetails
+            })
         }else {
             return res.status(400).send({
               withdraw_error: "You don't have enough balance in your account"
             });
         }
-        await session.commitTransaction()
-        session.endSession()
-        res.send({
-            msg:'Amount withdrawn'
-        })
     } catch (error) {
         await session.abortTransaction()
         session.endSession()
@@ -74,4 +80,18 @@ Router.post('/withdraw/:id', authMiddleware, async(req, res)=> {
           });
     }
 })
+
+Router.get('/transactions/:id', authMiddleware, async(req, res) =>{
+    const { start_date, end_date} = req.query
+    try {
+        const result = await getTransactions(req.params.id, start_date, end_date)
+        res.send(result)
+    } catch (error) {
+        res.status(400).send({
+            transactions_error:
+              'Error while getting transactions list..Try again later.'
+        });
+    }
+})
+
 module.exports = Router

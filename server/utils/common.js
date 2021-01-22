@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken');
 const BankUser = require('../models/BankUser');
+const Transactions = require('../models/Transactions');
 
 const isInvalidField = (receivedFields, validFieldsToUpdate) => {
     console.log(receivedFields, validFieldsToUpdate)
@@ -35,10 +36,35 @@ const generateAuthToken = async (user) => {
     return token;
 };
 
+
+const getTransactions = async ( account_id, start_date, end_date) => {
+    try {
+      if( start_date && end_date){
+        const result = await Transactions.find({
+          account_id,
+          transaction_date : {
+            $gte : new Date(start_date),
+            $lte: new Date(end_date)
+          }
+        }).sort({ transaction_date: 'desc'})
+        return result
+      }
+      else{
+        const result = await Transactions.find({
+          account_id
+        }).sort({ transaction_date: 'desc'})
+        return result
+      }
+    } catch (error) {
+        throw new Error();
+    }
+}
+
 module.exports = {
     isInvalidField,
     validateUser,
-    generateAuthToken
+    generateAuthToken,
+    getTransactions
   };
 
   

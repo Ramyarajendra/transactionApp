@@ -7,6 +7,7 @@ import {register} from '../actions/Auth'
 import {validateFields} from '../utils/Common'
 import {setErrors} from '../actions/Alert'
 import { Alert } from '@material-ui/lab';
+import { Link, useHistory } from 'react-router-dom';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -26,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
   }));
 const Register = ({register, error, setErrors, success}) => {
     const classes = useStyles();
+    const history = useHistory()
     const [values, setValues] = React.useState({
         password: '',
         showPassword: false,
@@ -52,6 +54,9 @@ const Register = ({register, error, setErrors, success}) => {
             setErrors({signup_error: 'Please enter all the fields!!'})
         } else {
             const succ = await register({ fname, lname, email, password })
+            if(succ){
+              history.push('/')
+            }
             // if(succ.success){
             //     console.log('success..')
             //     setValues({...values, isSubmitted:true})
@@ -177,6 +182,10 @@ const Register = ({register, error, setErrors, success}) => {
             </Box>
             <Box justifyContent='center' display='flex'>
                 <Button type='submit' variant="contained" className={clsx(classes.margin, classes.textField)} color="primary">SIGN UP</Button>
+            </Box>
+            <Box display='flex' justifyContent='center'>
+                Already Registered ? <Link to='/' >
+                <strong> Login</strong></Link> 
             </Box>
         </Grid>
         </form>

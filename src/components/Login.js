@@ -8,7 +8,7 @@ import { validateFields } from '../utils/Common';
 import { Alert } from '@material-ui/lab';
 import { setErrors } from '../actions/Alert';
 import {history} from '../routers/AppRouter'
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -80,6 +80,7 @@ const Login = ({initiateLogin, error, setErrors, auth}) => {
       };
 
     return (
+      <>
       <form onSubmit={handleLogin}>
         {error &&  values.open && error.map(e => ( <Snackbar open={values.open} autoHideDuration={6000} onClose={handleClose}>
           <Alert onClose={handleClose} severity="error">
@@ -137,8 +138,15 @@ const Login = ({initiateLogin, error, setErrors, auth}) => {
             <Box justifyContent='center' display='flex'>
                 <Button type='submit' variant="contained" className={clsx(classes.margin, classes.textField)} color="primary">SIGN IN</Button>
             </Box>
+            <Box display='flex' justifyContent='center'>
+                New Customer ? <Link to='/register' >
+                <strong> Register</strong></Link> 
+            </Box>
         </Grid>
         </form>
+      
+      </>
+
     )
 }
 
